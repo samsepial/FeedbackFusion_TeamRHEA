@@ -1,0 +1,162 @@
+[
+    {
+      "feedback_text": "The staff was extremely helpful during our stay. Room was clean and comfortable.",
+      "date": "2025-03-14",
+      "source": "Google Reviews",
+      "rating": 5,
+      "textTranslated": "",
+      "department": "Front Desk"
+    },
+    {
+      "feedback_text": "Great location and friendly staff. Breakfast was delicious with plenty of options.",
+      "date": "2025-03-14",
+      "source": "Booking.com",
+      "rating": 4,
+      "textTranslated": "",
+      "department": "Food & Beverage"
+    },
+    {
+      "feedback_text": "Room service was slow and my order was incorrect when it finally arrived.",
+      "date": "2025-03-13",
+      "source": "Internal Survey",
+      "rating": 2,
+      "textTranslated": "",
+      "department": "Room Service"
+    },
+    {
+      "feedback_text": "The bathroom wasn't properly cleaned when we arrived. There were hairs in the tub.",
+      "date": "2025-03-13",
+      "source": "TripAdvisor",
+      "rating": 2,
+      "textTranslated": "",
+      "department": "Housekeeping"
+    },
+    {
+      "feedback_text": "Restaurant menu needs more vegetarian options, but staff was very accommodating.",
+      "date": "2025-03-13",
+      "source": "Internal Survey",
+      "rating": 4,
+      "textTranslated": "",
+      "department": "Restaurant/Café"
+    },
+    {
+      "feedback_text": "Internet was too slow and kept disconnecting during my business calls.",
+      "date": "2025-03-12",
+      "source": "Google Reviews",
+      "rating": 3,
+      "textTranslated": "",
+      "department": "IT"
+    },
+    {
+      "feedback_text": "The fitness center equipment is outdated and some machines were out of order.",
+      "date": "2025-03-12",
+      "source": "Internal Survey",
+      "rating": 3,
+      "textTranslated": "",
+      "department": "Maintenance"
+    },
+    {
+      "feedback_text": "Check-in process was quick and efficient. Staff was very welcoming.",
+      "date": "2025-03-12",
+      "source": "Booking.com",
+      "rating": 5,
+      "textTranslated": "",
+      "department": "Front Desk"
+    },
+    {
+      "feedback_text": "The air conditioning in our room wasn't working properly, and it took hours for maintenance to respond.",
+      "date": "2025-03-11",
+      "source": "TripAdvisor",
+      "rating": 2,
+      "textTranslated": "",
+      "department": "Maintenance"
+    },
+    {
+      "feedback_text": "Excellent breakfast selection and the coffee was outstanding!",
+      "date": "2025-03-11",
+      "source": "Google Reviews",
+      "rating": 5,
+      "textTranslated": "",
+      "department": "Food & Beverage"
+    },
+    {
+      "feedback_text": "Housekeeping staff was very responsive when we requested extra towels.",
+      "date": "2025-03-11",
+      "source": "Internal Survey",
+      "rating": 4,
+      "textTranslated": "",
+      "department": "Housekeeping"
+    },
+    {
+      "feedback_text": "The room was smaller than shown in the photos online.",
+      "date": "2025-03-10",
+      "source": "Booking.com",
+      "rating": 3,
+      "textTranslated": "",
+      "department": "General"
+    },
+    {
+      "feedback_text": "The spa services were excellent and very relaxing. Would highly recommend.",
+      "date": "2025-03-10",
+      "source": "TripAdvisor",
+      "rating": 5,
+      "textTranslated": "",
+      "department": "General"
+    },
+    {
+      "feedback_text": "Front desk staff was rude when we asked for directions to local attractions.",
+      "date": "2025-03-10",
+      "source": "Google Reviews",
+      "rating": 2,
+      "textTranslated": "",
+      "department": "Front Desk"
+    },
+    {
+      "feedback_text": "Room was immaculate and the bed was very comfortable.",
+      "date": "2025-03-09",
+      "source": "Internal Survey",
+      "rating": 5,
+      "textTranslated": "",
+      "department": "Housekeeping"
+    },
+    {
+      "feedback_text": "The food at the restaurant was overpriced for the quality received.",
+      "date": "2025-03-09",
+      "source": "Booking.com",
+      "rating": 3,
+      "textTranslated": "",
+      "department": "Restaurant/Café"
+    },
+    {
+      "feedback_text": "Concierge provided excellent recommendations for local dining and attractions.",
+      "date": "2025-03-09",
+      "source": "TripAdvisor",
+      "rating": 5,
+      "textTranslated": "",
+      "department": "Front Desk"
+    },
+    {
+      "feedback_text": "The shower had very low water pressure and the temperature was inconsistent.",
+      "date": "2025-03-08",
+      "source": "Google Reviews",
+      "rating": 2,
+      "textTranslated": "",
+      "department": "Maintenance"
+    },
+    {
+      "feedback_text": "The breakfast buffet had limited options for someone with dietary restrictions.",
+      "date": "2025-03-08",
+      "source": "Internal Survey",
+      "rating": 3,
+      "textTranslated": "",
+      "department": "Food & Beverage"
+    },
+    {
+      "feedback_text": "Overall very pleasant stay. All staff members were friendly and helpful.",
+      "date": "2025-03-08",
+      "source": "Booking.com",
+      "rating": 4,
+      "textTranslated": "",
+      "department": "General"
+    }
+  ]

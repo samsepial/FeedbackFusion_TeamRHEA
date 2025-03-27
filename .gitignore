@@ -1,0 +1,19 @@
+# Large model files
+*.safetensors
+*.bin
+*.dylib
+*.onnx
+*.pt
+*.pth
+
+# Python virtual environment
+venv/
+env/
+ENV/
+
+# Node modules
+node_modules/
+
+# Upload folders
+uploads/
+backend/uploads/

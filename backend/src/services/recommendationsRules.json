@@ -1,0 +1,283 @@
+[
+  {
+   "department": "front desk",
+    "keywords": [  "rude",
+    "unfriendly",
+    "impolite",
+    "unhelpful",
+    "bad service",
+    "borderline rude",
+    "experience was poor",
+    "disappointing service",
+    "impersonal",
+    "not good services",
+    "charged for an early arrival",
+    "unfriendly waitresses",
+    "glitch in the system",
+    "service very slow",
+    "Service was very poor",
+    "no proper staff training",
+    "annoying arrival"],
+
+    "solution": [ "Implement regular staff performance evaluations",
+    "Introduce incentives for excellent service", "Provide customer service training and reinforce communication protocols for front desk staff." ]
+  },
+  {
+    "department": "IT",
+    "keywords": [
+      "slow wifi",
+      "internet problem",
+      "wi-fi slow",
+      "wifi signal was terrible",
+      "disconnected WiFi",
+      "weak signal",
+      "intermittent connection",
+      "cutting out",
+      "wifi sucks"
+    ],
+    "solutions": [
+      "Upgrade Wi-Fi bandwidth or add repeaters",
+      "Reposition routers to minimize interference"
+    ]
+  },
+
+  {
+   "department": "room service",
+    "keywords": [
+      "missing water bottles",
+      "no coffee machine",
+      "no water bottles",
+      "Empty refrigerator",
+      "no bottles of water"
+    ],
+    "solutions": [
+      "Ensure adequate supply of amenities in all rooms",
+      "Improve room service efficiency and check supplies regularly"
+    ]
+  },
+  {
+   "department":"housekeeping",
+    "keywords": [
+      "dirty room",
+      "no towels",
+      "towels are very worn out",
+      "unhygienic",
+      "inconsistent cleaning",
+      "poor cleanliness",
+      "hair found",
+      "mold",
+      "dust",
+      "dirt",
+      "no one clean",
+      "stains",
+      "unmaintained room",
+      "room had not been cleaned",
+      "rushed cleaning",
+      "room cleaning disappointing",
+      "mattresses are not clean",
+      "sink are not clean",
+      "poor hygiene"
+    ],
+    "solution": [ "Increase cleaning frequency and implement rigorous cleaning protocols",
+    "Consider renovating room layout to improve privacy and comfort"
+    
+    ]
+  },
+  {
+    "department": "housekeeping",
+    "keywords": [
+      "open bathroom",
+      "bathroom is open to the room",
+      "toilet smells",
+      "moldy joints",
+      "toilet",
+      "bad sound isolation",
+      "no hot water",
+      "tepid water",
+      "water can not be controlled",
+      "water leak",
+      "tiles so slippery",
+      "tiny room",
+      "bathroom is very bad",
+      "shower head low",
+      "small shower stall",
+      "low water pressure",
+      "no noise cancellation",
+      "bad smell",
+      "no privacy"
+    ],
+    "solution": [ "Consider renovating room layout to improve privacy and comfort", 
+    "Upgrade bathroom fixtures and improve ventilation"
+    ]
+  },
+  {
+    "department": "maintenance & amenities",
+    "keywords": [
+      "furniture is old",
+      "room is very old",
+      "rooms are old",
+      "without maintenance",
+      "uncomfortable room",
+      "hole in the headboard",
+      "mattresses are not clean",
+      "damaged curtain",
+      "sofas broken",
+      "worn out mattresses",
+      "no privacy",
+      "poor quality of windows",
+      "uncomfortable to sleep",
+      "open concept"
+    ],
+    "solution": [ "Consider renovating room layout to improve privacy and comfort",
+    "Replace outdated furniture and repair damaged items"]
+  },
+
+  {
+    "department": "housekeeping",
+    "keywords": ["bed bugs", "cockroach", "pest", "insect", "rodents"],
+    "solutions": [
+      "Contact pest control immediately",
+      "Schedule regular deep cleaning and fumigation",
+      "Inspect rooms regularly and maintain preventative measures"
+    ]
+  },
+  {
+    "keywords": [
+      "loud noise",
+      "loud music",
+      "noisy",
+      "noisy environment",
+      "thin walls",
+      "street noise",
+      "disturbing noise",
+      "screaming",
+      "a lot of noise",
+      "annoying noise",
+      "excessive noise",
+      "disturbing sounds"
+    ],
+    "solutions": [
+      "Enhance soundproofing in rooms",
+      "Review and adjust volume levels during late hours",
+      "Offer earplugs or white noise machines to guests",
+      "Offer alternative quiet zones"
+    ]
+  },
+  {
+    "keywords": [
+      "dim lighting",
+      "poor lighting",
+      "gloomy",
+      "yellow lighting",
+      "dark room",
+      "inadequate illumination"
+    ],
+    "solutions": [
+      "Upgrade lighting fixtures to brighter LED bulbs",
+      "Install adjustable lighting systems to enhance ambiance"
+    ]
+  },
+  {
+  "department": "room service",
+    "keywords": [
+      "slow service",
+      "delayed delivery",
+      "unresponsive",
+      "incomplete order",
+      "poor room service",
+      "slow room service"
+    ],
+    "solutions": [
+      "Optimize service operations through better scheduling",
+      "Implement staff training for prompt and accurate service",
+      "Leverage technology to streamline order processing"
+    ]
+  },
+  {
+    "keywords": [
+      "overpriced minibar",
+      "expensive snacks",
+      "high minibar prices",
+      "expensive",
+      "overpriced",
+      "price is a little higher",
+      "costly drinks"
+    ],
+    "solutions": [
+      "Adjust pricing strategy to be more competitive",
+      "Offer complimentary basic items or bundled deals"
+    ]
+  },
+  { "department": "food and beverage",
+
+    "keywords": [
+      "cold food",
+      "poor presentation",
+      "limited menu",
+      "worst breakfast",
+      "bad breakfast",
+      "not fresh",
+      "food",
+      "breakfast",
+      "weak breakfast",
+      "limited breakfast",
+      "poor quality breakfast",
+      "small portion sizes"
+    ],
+    "solutions": [
+      "Improve food quality and presentation standards",
+      "Optimize staff scheduling and training for faster service",
+      "Revise menu offerings, portion sizes, and improve food quality",
+      "Increase variety and ensure consistency in food offerings"
+    ]
+  },
+  {
+  "department": "maintenance & amenities",
+    "keywords": [
+      "dirty facilities",
+      "unmaintained pool",
+      "old equipment",
+      "crowded lobby",
+      "pool is small",
+      "small rooms",
+      "average equipment",
+      "outdated",
+      "A/c is not cooling",
+      "air conditioning is hot",
+      "facility issues"
+    ],
+    "solutions": [
+      "Schedule regular maintenance and deep cleaning of facilities",
+      "Upgrade outdated equipment and expand high-traffic areas",
+      "Increase cleaning frequency during high occupancy periods"
+    ]
+  },
+  {
+    "keywords": [
+      "parking full",
+      "no parking",
+      "parking issues",
+      "parking problem"
+    ],
+    "solutions": [
+      "Improve parking management and signage",
+      "Consider expanding parking facilities or partnering with nearby lots"
+    ]
+  },
+  {
+    "keywords": [
+      "management disaster",
+      "lost magic vibe",
+      "bad management",
+      "rude manager",
+      "management",
+      "unprofessional management",
+      "management issues"
+    ],
+    "solutions": [
+      "Review management practices and improve training",
+      "Gather customer feedback and implement changes",
+      "Enhance communication and accountability in management"
+    ]
+  }
+]
