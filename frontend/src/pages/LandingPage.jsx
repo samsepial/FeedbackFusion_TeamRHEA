@@ -4,13 +4,16 @@ import { useNavigate } from 'react-router-dom';
 
 const LandingPage = () => {
   const [darkMode, setDarkMode] = useState(false);
+  const [selectedTab, setSelectedTab] = useState('problem');
   const navigate = useNavigate();
-
+  
+  // Check system preference for dark mode
   useEffect(() => {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     setDarkMode(prefersDark);
   }, []);
- 
+  
+  // Toggle dark mode
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
@@ -130,11 +133,320 @@ const LandingPage = () => {
         </div>
       </div>
 
+      {/* Why FeedbackFusion Section */}
+      <div className={`py-16 ${darkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-base font-semibold text-green-600 tracking-wide uppercase">Why FeedbackFusion?</h2>
+            <p className="mt-1 text-4xl font-extrabold sm:text-5xl sm:tracking-tight lg:text-5xl">
+              Solving Real Challenges in Hotel Feedback Management
+            </p>
+            <p className={`max-w-xl mt-5 mx-auto text-xl ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              Our innovative platform transforms how hotels analyze and act on customer feedback
+            </p>
+          </div>
+          
+          {/* Tab navigation */}
+          <div className="flex justify-center mt-10">
+            <div className={`inline-flex rounded-md shadow-sm p-1 ${darkMode ? 'bg-gray-700' : 'bg-white'}`}>
+              <button
+                onClick={() => setSelectedTab('problem')}
+                className={`px-4 py-2 text-sm font-medium rounded-md ${
+                  selectedTab === 'problem'
+                    ? 'bg-green-600 text-white'
+                    : darkMode 
+                      ? 'text-gray-300 hover:bg-gray-600' 
+                      : 'text-gray-700 hover:bg-gray-50'
+                } transition-colors`}
+              >
+                The Problem
+              </button>
+              <button
+                onClick={() => setSelectedTab('solution')}
+                className={`px-4 py-2 text-sm font-medium rounded-md ${
+                  selectedTab === 'solution'
+                    ? 'bg-green-600 text-white'
+                    : darkMode 
+                      ? 'text-gray-300 hover:bg-gray-600' 
+                      : 'text-gray-700 hover:bg-gray-50'
+                } transition-colors`}
+              >
+                Our Solution
+              </button>
+              <button
+                onClick={() => setSelectedTab('difference')}
+                className={`px-4 py-2 text-sm font-medium rounded-md ${
+                  selectedTab === 'difference'
+                    ? 'bg-green-600 text-white'
+                    : darkMode 
+                      ? 'text-gray-300 hover:bg-gray-600' 
+                      : 'text-gray-700 hover:bg-gray-50'
+                } transition-colors`}
+              >
+                The Difference
+              </button>
+            </div>
+          </div>
+          
+          {/* Tab content */}
+          <div className="mt-12">
+            {selectedTab === 'problem' && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center"
+              >
+                <div>
+                  <h3 className="text-2xl font-bold mb-4">The Feedback Challenge</h3>
+                  <div className={`space-y-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <div className="flex items-center justify-center h-10 w-10 rounded-md bg-green-500 text-white">
+                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="ml-4">
+                        <h4 className="text-lg font-medium">Fragmented Feedback Sources</h4>
+                        <p className="mt-2">Hotels receive feedback from multiple channels (booking platforms, direct surveys, social media), making it difficult to track and analyze feedback holistically.</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <div className="flex items-center justify-center h-10 w-10 rounded-md bg-green-500 text-white">
+                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="ml-4">
+                        <h4 className="text-lg font-medium">Time-Consuming Manual Analysis</h4>
+                        <p className="mt-2">Analyzing feedback manually is labor-intensive, often leading to missed trends and actionable insights that could improve guest experience.</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <div className="flex items-center justify-center h-10 w-10 rounded-md bg-green-500 text-white">
+                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="ml-4">
+                        <h4 className="text-lg font-medium">Lack of Prioritization</h4>
+                        <p className="mt-2">Without a systematic approach, hotels struggle to determine which feedback should take precedence, leading to inefficient resource allocation.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className={`rounded-lg overflow-hidden shadow-xl ${darkMode ? 'bg-gray-700' : 'bg-white'}`}>
+                  <img 
+                    src={darkMode ? "feedback-challenge-dark.png" : "feedback-challenge.png"} 
+                    alt="Hotel feedback challenges" 
+                    className="w-full h-auto"
+                    onError={(e) => { e.target.src = "https://via.placeholder.com/600x400?text=Feedback+Challenges"; }}
+                  />
+                </div>
+              </motion.div>
+            )}
+            
+            {selectedTab === 'solution' && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center"
+              >
+                <div className={`rounded-lg overflow-hidden shadow-xl ${darkMode ? 'bg-gray-700' : 'bg-white'} order-2 lg:order-1`}>
+                  <img 
+                    src={darkMode ? "solution-dark.png" : "solution.png"} 
+                    alt="FeedbackFusion solution" 
+                    className="w-full h-auto"
+                    onError={(e) => { e.target.src = "https://via.placeholder.com/600x400?text=Our+Solution"; }}
+                  />
+                </div>
+                
+                <div className="order-1 lg:order-2">
+                  <h3 className="text-2xl font-bold mb-4">The FeedbackFusion Solution</h3>
+                  <div className={`space-y-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <div className="flex items-center justify-center h-10 w-10 rounded-md bg-green-500 text-white">
+                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="ml-4">
+                        <h4 className="text-lg font-medium">Centralized Feedback Repository</h4>
+                        <p className="mt-2">Our system aggregates feedback from multiple sources into a single platform, providing hotels with a comprehensive view of guest sentiment.</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <div className="flex items-center justify-center h-10 w-10 rounded-md bg-green-500 text-white">
+                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="ml-4">
+                        <h4 className="text-lg font-medium">AI-Powered Analysis</h4>
+                        <p className="mt-2">Our advanced NLP algorithms automatically analyze feedback to identify sentiment, emotion, and department relevance, saving staff time and ensuring consistent analysis.</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <div className="flex items-center justify-center h-10 w-10 rounded-md bg-green-500 text-white">
+                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="ml-4">
+                        <h4 className="text-lg font-medium">Actionable Recommendations</h4>
+                        <p className="mt-2">FeedbackFusion doesn't just analyze data—it generates specific recommendations to help hotels prioritize improvements and enhance guest satisfaction.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+            
+            {selectedTab === 'difference' && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <h3 className="text-2xl font-bold mb-8 text-center">Why We're Different</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {/* Card 1 */}
+                  <div className={`rounded-xl overflow-hidden shadow-lg ${darkMode ? 'bg-gray-700' : 'bg-white'}`}>
+                    <div className="p-6">
+                      <div className="flex items-center justify-center h-12 w-12 rounded-md bg-green-500 text-white mx-auto mb-4">
+                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-medium text-center mb-2">Advanced Sentiment Analysis</h3>
+                      <div className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                        <p>Our multi-category sentiment and emotion detection provides deeper insights than the basic positive/negative classification offered by competitors.</p>
+                        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+                          <p className="text-sm text-center font-semibold text-green-500">5x more accurate emotional insights</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Card 2 */}
+                  <div className={`rounded-xl overflow-hidden shadow-lg ${darkMode ? 'bg-gray-700' : 'bg-white'}`}>
+                    <div className="p-6">
+                      <div className="flex items-center justify-center h-12 w-12 rounded-md bg-green-500 text-white mx-auto mb-4">
+                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-medium text-center mb-2">Historical Intelligence</h3>
+                      <div className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                        <p>Our robust trend analysis tools help hotels track the impact of service improvements over time, giving you the long-term insights competitors can't provide.</p>
+                        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+                          <p className="text-sm text-center font-semibold text-green-500">Track improvements with 12-month history</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Card 3 */}
+                  <div className={`rounded-xl overflow-hidden shadow-lg ${darkMode ? 'bg-gray-700' : 'bg-white'}`}>
+                    <div className="p-6">
+                      <div className="flex items-center justify-center h-12 w-12 rounded-md bg-green-500 text-white mx-auto mb-4">
+                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-medium text-center mb-2">AI-Driven Recommendations</h3>
+                      <div className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                        <p>Unlike competitors who just identify issues, our system suggests specific actions based on feedback patterns, going beyond just reporting to actual problem-solving.</p>
+                        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+                          <p className="text-sm text-center font-semibold text-green-500">Clear actions, not just analytics</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-12 text-center">
+                  <h4 className="text-xl font-bold mb-4">Competitive Advantage</h4>
+                  <div className={`inline-block ${darkMode ? 'bg-gray-700' : 'bg-white'} rounded-lg shadow-lg overflow-hidden`}>
+                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                      <thead className={`${darkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
+                        <tr>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Feature</th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">FeedbackFusion</th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Competitors</th>
+                        </tr>
+                      </thead>
+                      <tbody className={`${darkMode ? 'bg-gray-700' : 'bg-white'} divide-y divide-gray-200 dark:divide-gray-700`}>
+                        <tr>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">Multi-category sentiment analysis</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <span className="text-green-500">✓ Advanced</span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <span className={`${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>✓ Basic</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">Department-specific routing</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <span className="text-green-500">✓ Automatic</span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <span className={`${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>× Manual</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">Historical trend analysis</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <span className="text-green-500">✓ Comprehensive</span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <span className={`${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>✓ Limited</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">AI-driven recommendations</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <span className="text-green-500">✓ Included</span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <span className={`${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>× Not available</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </div>
+        </div>
+      </div>
+
       {/* Features section - redesigned for interactivity */}
       <div id="features" className="py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-base font-semibold text-green-600 tracking-wide uppercase">Features</h2>
+          <h2 className="text-base font-semibold text-green-600 tracking-wide uppercase">Features</h2>
             <p className="mt-1 text-4xl font-extrabold sm:text-5xl sm:tracking-tight lg:text-5xl">
               Everything you need to understand your guests
             </p>
@@ -312,96 +624,96 @@ const LandingPage = () => {
       </div>
 
       {/* Team section */}
-<div className={`${darkMode ? 'bg-gray-800' : 'bg-gray-100'} py-16`}>
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div className="text-center">
-      <h2 className="text-base font-semibold text-green-600 tracking-wide uppercase">Our Team</h2>
-      <p className="mt-1 text-4xl font-extrabold sm:text-5xl sm:tracking-tight lg:text-5xl">
-        Meet the minds behind FeedbackFusion
-      </p>
-      <p className={`max-w-xl mt-5 mx-auto text-xl ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-        A passionate team dedicated to transforming the hotel feedback experience
-      </p>
-    </div>
-    
-    <div className="mt-16 flex flex-wrap justify-center">
-      {/* Junaid Hussain - Furthest Left */}
-      <div className="p-4 w-full sm:w-1/2 md:w-1/5">
-        <div className={`text-center p-6 ${darkMode ? 'bg-gray-900' : 'bg-white'} rounded-lg shadow-lg h-full`}>
-          <img 
-            src="junaid.jpeg" 
-            alt="Junaid Hussain" 
-            className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-green-500"
-          />
-          <h3 className="mt-4 text-lg font-medium">Junaid Hussain</h3>
-          <p className="text-sm text-green-500 mb-2">Member</p>
-          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Frontend Developer</p>
-          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>ML Engineer</p>
-        </div>
-      </div>
+      <div className={`${darkMode ? 'bg-gray-800' : 'bg-gray-100'} py-16`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-base font-semibold text-green-600 tracking-wide uppercase">Our Team</h2>
+            <p className="mt-1 text-4xl font-extrabold sm:text-5xl sm:tracking-tight lg:text-5xl">
+              Meet the minds behind FeedbackFusion
+            </p>
+            <p className={`max-w-xl mt-5 mx-auto text-xl ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              A passionate team dedicated to transforming the hotel feedback experience
+            </p>
+          </div>
+          
+          <div className="mt-16 flex flex-wrap justify-center">
+            {/* Junaid Hussain - Furthest Left */}
+            <div className="p-4 w-full sm:w-1/2 md:w-1/5">
+              <div className={`text-center p-6 ${darkMode ? 'bg-gray-900' : 'bg-white'} rounded-lg shadow-lg h-full`}>
+                <img 
+                  src="junaid.jpeg" 
+                  alt="Junaid Hussain" 
+                  className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-green-500"
+                />
+                <h3 className="mt-4 text-lg font-medium">Junaid Hussain</h3>
+                <p className="text-sm text-green-500 mb-2">Member</p>
+                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Frontend Developer</p>
+                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>ML Engineer</p>
+              </div>
+            </div>
 
-      {/* Leen Ramadan - Left of Center */}
-      <div className="p-4 w-full sm:w-1/2 md:w-1/5">
-        <div className={`text-center p-6 ${darkMode ? 'bg-gray-900' : 'bg-white'} rounded-lg shadow-lg h-full`}>
-          <img 
-            src="leen.jpeg" 
-            alt="Leen Ramadan" 
-            className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-green-500"
-          />
-          <h3 className="mt-4 text-lg font-medium">Leen Ramadan</h3>
-          <p className="text-sm text-green-500 mb-2">Member</p>
-          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Frontend Developer</p>
-          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Marketing Specialist</p>
-        </div>
-      </div>
+            {/* Leen Ramadan - Left of Center */}
+            <div className="p-4 w-full sm:w-1/2 md:w-1/5">
+              <div className={`text-center p-6 ${darkMode ? 'bg-gray-900' : 'bg-white'} rounded-lg shadow-lg h-full`}>
+                <img 
+                  src="leen.jpeg" 
+                  alt="Leen Ramadan" 
+                  className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-green-500"
+                />
+                <h3 className="mt-4 text-lg font-medium">Leen Ramadan</h3>
+                <p className="text-sm text-green-500 mb-2">Member</p>
+                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Frontend Developer</p>
+                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Marketing Specialist</p>
+              </div>
+            </div>
 
-      {/* Abdul Rehman - Center */}
-      <div className="p-4 w-full sm:w-1/2 md:w-1/5">
-        <div className={`text-center p-6 ${darkMode ? 'bg-gray-900' : 'bg-white'} rounded-lg shadow-lg h-full border-2 border-green-500`}>
-          <img 
-            src="abdul.jpeg" 
-            alt="Abdul Rehman" 
-            className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-green-500"
-          />
-          <h3 className="mt-4 text-lg font-medium">Abdul Rehman</h3>
-          <p className="text-sm text-green-500 mb-2">Leader</p>
-          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Fullstack Developer</p>
-          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>ML Engineer</p>
-        </div>
-      </div>
+            {/* Abdul Rehman - Center */}
+            <div className="p-4 w-full sm:w-1/2 md:w-1/5">
+              <div className={`text-center p-6 ${darkMode ? 'bg-gray-900' : 'bg-white'} rounded-lg shadow-lg h-full border-2 border-green-500`}>
+                <img 
+                  src="abdul.jpeg" 
+                  alt="Abdul Rehman" 
+                  className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-green-500"
+                />
+                <h3 className="mt-4 text-lg font-medium">Abdul Rehman</h3>
+                <p className="text-sm text-green-500 mb-2">Leader</p>
+                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Fullstack Developer</p>
+                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>ML Engineer</p>
+              </div>
+            </div>
 
-      {/* Haneen Elmashtouly - Right of Center */}
-      <div className="p-4 w-full sm:w-1/2 md:w-1/5">
-        <div className={`text-center p-6 ${darkMode ? 'bg-gray-900' : 'bg-white'} rounded-lg shadow-lg h-full`}>
-          <img 
-            src="haneen.jpeg" 
-            alt="Haneen Elmashtouly" 
-            className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-green-500"
-          />
-          <h3 className="mt-4 text-lg font-medium">Haneen Elmashtouly</h3>
-          <p className="text-sm text-green-500 mb-2">Member</p>
-          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Fullstack Developer</p>
-          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Backend Engineer</p>
-        </div>
-      </div>
+            {/* Haneen Elmashtouly - Right of Center */}
+            <div className="p-4 w-full sm:w-1/2 md:w-1/5">
+              <div className={`text-center p-6 ${darkMode ? 'bg-gray-900' : 'bg-white'} rounded-lg shadow-lg h-full`}>
+                <img 
+                  src="haneen.jpeg" 
+                  alt="Haneen Elmashtouly" 
+                  className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-green-500"
+                />
+                <h3 className="mt-4 text-lg font-medium">Haneen Elmashtouly</h3>
+                <p className="text-sm text-green-500 mb-2">Member</p>
+                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Fullstack Developer</p>
+                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Backend Engineer</p>
+              </div>
+            </div>
 
-      {/* Youssef Amro - Furthest Right */}
-      <div className="p-4 w-full sm:w-1/2 md:w-1/5">
-        <div className={`text-center p-6 ${darkMode ? 'bg-gray-900' : 'bg-white'} rounded-lg shadow-lg h-full`}>
-          <img 
-            src="youssef.jpeg" 
-            alt="Youssef Amro" 
-            className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-green-500"
-          />
-          <h3 className="mt-4 text-lg font-medium">Youssef Amro</h3>
-          <p className="text-sm text-green-500 mb-2">Scribe</p>
-          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Backend Developer</p>
-          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Database Specialist</p>
+            {/* Youssef Amro - Furthest Right */}
+            <div className="p-4 w-full sm:w-1/2 md:w-1/5">
+              <div className={`text-center p-6 ${darkMode ? 'bg-gray-900' : 'bg-white'} rounded-lg shadow-lg h-full`}>
+                <img 
+                  src="youssef.jpeg" 
+                  alt="Youssef Amro" 
+                  className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-green-500"
+                />
+                <h3 className="mt-4 text-lg font-medium">Youssef Amro</h3>
+                <p className="text-sm text-green-500 mb-2">Scribe</p>
+                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Backend Developer</p>
+                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Database Specialist</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
       
       {/* CTA Section - modified */}
       <div className="bg-green-600">
