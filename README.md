@@ -1,3 +1,6 @@
+Here's the full README file updated to use Yarn commands instead of npm:
+
+```markdown
 # FeedbackFusion
 
 ![FeedbackFusion Logo](public/FF.png)
@@ -105,23 +108,24 @@ FeedbackFusion/
 - MongoDB (v4.4+)
 - Python (v3.8+)
 - Git
+- Yarn
 
 ### Step 1: Clone the repository
 ```bash
-git clone https://github.com/YourUsername/FeedbackFusion_TeamRHEA.git
+git clone https://github.com/samsepial/FeedbackFusion_TeamRHEA.git
 cd FeedbackFusion_TeamRHEA
 ```
 
 ### Step 2: Set up backend
 ```bash
 cd backend
-npm install
+yarn install
 ```
 
 ### Step 3: Set up frontend
 ```bash
 cd ../frontend
-npm install
+yarn install
 ```
 
 ### Step 4: Set up NLP service
@@ -137,6 +141,20 @@ The sentiment analysis model is hosted on Hugging Face and can be accessed at:
 
 For local development, the model will be automatically downloaded when running the NLP service.
 
+#### Note about NLP Models
+## NLP Models
+
+The sentiment analysis model is hosted on Hugging Face and can be accessed at:
+- Model: ar2107/rhea_sentiment_finetuned_lite
+
+For local development, the model will be automatically downloaded when running the NLP service.
+   ```
+
+2. **Or train your own models** using the included `sentiment_training.py` script:
+   ```bash
+   python sentiment_training.py
+   ```
+
 ### Step 5: Set up MongoDB
 Ensure MongoDB is running on your system. The application will try to connect to `mongodb://127.0.0.1:27017/feedbackfusion` by default.
 
@@ -145,14 +163,14 @@ Ensure MongoDB is running on your system. The application will try to connect to
 ### Starting the Backend
 ```bash
 cd backend
-npm start
+yarn start
 ```
 The server will run on http://localhost:4000
 
 ### Starting the Frontend
 ```bash
 cd frontend
-npm run dev
+yarn dev
 ```
 The frontend will run on http://localhost:5173
 
@@ -191,9 +209,9 @@ Password: `admin123`
 
 ## License
 
-This project was developed as an academic project for [Your University/Institution Name].
+This project was developed as an academic project.
 
 ## Acknowledgements
 
-- Special thanks to our professor [Professor's Name] for guidance throughout the project.
+- Special thanks to our professor for guidance throughout the project.
 - We'd like to acknowledge the open-source libraries and frameworks that made this project possible.

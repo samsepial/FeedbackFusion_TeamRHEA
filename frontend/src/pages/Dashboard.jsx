@@ -1,3 +1,4 @@
+// src/pages/Dashboard.jsx
 import React, { useState, useEffect, useContext } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
@@ -11,9 +12,11 @@ import {
 import AlertSidebar from '../components/AlertSidebar';
 
 const Dashboard = () => {
+  // Get theme context
   const { darkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
   
+  // State for data
   const [recommendations, setRecommendations] = useState([]);
   const [checkedRecommendations, setCheckedRecommendations] = useState([]);
   const [currentRecommendation, setCurrentRecommendation] = useState(0);
@@ -24,7 +27,7 @@ const Dashboard = () => {
     alerts: 0
   });
   const [loading, setLoading] = useState(true);
-  const [timeframe, setTimeframe] = useState('week'); 
+  const [timeframe, setTimeframe] = useState('week'); // 'week', 'all'
   
   // State for chart data
   const [sentimentData, setSentimentData] = useState([]);
@@ -37,6 +40,7 @@ const Dashboard = () => {
   const [alertSidebarOpen, setAlertSidebarOpen] = useState(false);
   const [recentReports, setRecentReports] = useState([]);
   
+  // Colors for different departments
   const DEPARTMENT_COLORS = {
     'housekeeping': '#4ade80',
     'front desk': '#60a5fa',
@@ -50,43 +54,50 @@ const Dashboard = () => {
   
   const EMOTION_COLORS = ['#4ade80', '#94a3b8', '#60a5fa', '#f59e0b', '#ef4444'];
   
-    useEffect(() => {
+  // Load data on component mount
+  useEffect(() => {
     fetchDashboardData();
     fetchAlerts();
     
+    // Get report history
     const reports = getReportHistory();
-    setRecentReports(reports.slice(0, 3)); 
+    setRecentReports(reports.slice(0, 3)); // Only show the last 3 reports
+  }, [timeframe]);
   
-
+  // Function to fetch alerts
   const fetchAlerts = async () => {
     try {
       const response = await api.get('/alerts');
       const allAlerts = response.data || [];
       
-
+      // Filter for triggered alerts
       const triggered = allAlerts.filter(alert => alert.triggered);
       setActiveAlerts(triggered);
       
-       setStats(prev => ({ ...prev, alerts: triggered.length }));
+      // Update stats with alert count
+      setStats(prev => ({ ...prev, alerts: triggered.length }));
     } catch (error) {
       console.error('Error fetching alerts:', error);
     }
   };
-
+  
+  // Function to fetch dashboard data
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
       
+      // Get date range based on timeframe
       const endDate = new Date();
       const startDate = new Date();
       
       if (timeframe === 'week') {
         startDate.setDate(endDate.getDate() - 7);
       } else if (timeframe === 'all') {
-        startDate.setFullYear(startDate.getFullYear() - 1); 
+        startDate.setFullYear(startDate.getFullYear() - 1); // Default to 1 year
       }
       
-       const feedbackResponse = await api.get('/feedback', {
+      // Fetch feedback data
+      const feedbackResponse = await api.get('/feedback', {
         params: {
           start: startDate.toISOString(),
           end: endDate.toISOString()
@@ -95,6 +106,7 @@ const Dashboard = () => {
       
       const feedbackData = feedbackResponse.data || [];
       
+      // Fetch historical data
       const histResponse = await api.get('/feedback/historical', {
         params: {
           start: startDate.toISOString(),
@@ -102,14 +114,18 @@ const Dashboard = () => {
         }
       });
       
-            processHistoricalData(histResponse.data || []);
- 
+      // Process historical data
+      processHistoricalData(histResponse.data || []);
+      
+      // Calculate stats
       calculateStats(feedbackData);
       
+      // Process data for charts
       processDepartmentData(feedbackData);
       processEmotionData(feedbackData);
       processSentimentData(feedbackData);
- 
+      
+      // Extract recommendations
       extractRecommendations(feedbackData);
       
     } catch (error) {
@@ -119,7 +135,9 @@ const Dashboard = () => {
     }
   };
   
+  // Process historical data
   const processHistoricalData = (data) => {
+    // Format for chart
     const formattedData = data.map(item => ({
       date: item._id,
       sentiment: item.avgRating || 0,
@@ -128,15 +146,18 @@ const Dashboard = () => {
     
     setHistoricalData(formattedData);
   };
- 
+  
+  // Calculate stats from feedback data
   const calculateStats = (feedbackData) => {
     if (!feedbackData || feedbackData.length === 0) {
       return;
     }
     
+    // Calculate average rating
     const totalRating = feedbackData.reduce((sum, item) => sum + (item.rating || 0), 0);
     const avgRating = (totalRating / feedbackData.length).toFixed(1);
-
+    
+    // Calculate sentiment percentage
     const positiveCount = feedbackData.filter(item => 
       item.sentiment_label === 'positive' || item.sentiment_label === 'very positive'
     ).length;
@@ -149,13 +170,16 @@ const Dashboard = () => {
       reviewCount: feedbackData.length
     }));
   };
+  
+  // Process department data with specific colors
   const processDepartmentData = (feedbackData) => {
     const deptScores = {};
     
     feedbackData.forEach(item => {
       if (!item.department) return;
       
-          let normalizedDept = item.department.toLowerCase();
+      // Normalize department name - standardize on "Food & Beverage" format
+      let normalizedDept = item.department.toLowerCase();
       if (normalizedDept === 'food and beverage') {
         normalizedDept = 'food & beverage';
       }
@@ -168,20 +192,25 @@ const Dashboard = () => {
       deptScores[normalizedDept].count++;
     });
     
+    // Format and sort the department data
     const formatted = Object.keys(deptScores).map(name => {
-          const displayName = name.split(' ').map(word => 
+      // Format display name with proper capitalization
+      const displayName = name.split(' ').map(word => 
         word.charAt(0).toUpperCase() + word.slice(1)
       ).join(' ');
       
       return {
         name: displayName,
         score: parseFloat((deptScores[name].total / deptScores[name].count).toFixed(1)),
+        // Assign color based on department or use default if not found
         color: DEPARTMENT_COLORS[name] || '#22c55e'
       };
     });
-
+    
+    // Sort to identify top and bottom performers
     formatted.sort((a, b) => b.score - a.score);
-
+    
+    // Add a note to each entry if it's top or bottom
     if (formatted.length > 0) {
       formatted[0].isTop = true;
       formatted[formatted.length - 1].isBottom = true;
@@ -189,7 +218,8 @@ const Dashboard = () => {
     
     setDepartmentData(formatted);
   };
-
+  
+  // Process emotion data
   const processEmotionData = (feedbackData) => {
     const emotions = {};
     
@@ -201,12 +231,14 @@ const Dashboard = () => {
     });
     
     const formatted = Object.keys(emotions).map(name => ({
-      name: name.charAt(0).toUpperCase() + name.slice(1), 
+      name: name.charAt(0).toUpperCase() + name.slice(1), // Capitalize emotion
       value: emotions[name]
     }));
-
+    
+    // Sort by count and take top 5
     formatted.sort((a, b) => b.value - a.value);
-
+    
+    // Convert to percentages
     const total = formatted.reduce((sum, item) => sum + item.value, 0);
     const formattedPercentages = formatted.slice(0, 5).map(item => ({
       name: item.name,
@@ -216,9 +248,11 @@ const Dashboard = () => {
     setEmotionData(formattedPercentages);
   };
   
-    const processSentimentData = (feedbackData) => {
+  // Process sentiment data by day
+  const processSentimentData = (feedbackData) => {
     const days = {};
-  
+    
+    // Group by day of week
     feedbackData.forEach(item => {
       if (!item.date) return;
       
@@ -235,7 +269,8 @@ const Dashboard = () => {
         days[day].negative++;
       }
     });
- 
+    
+    // Convert to array format
     const formatted = Object.keys(days).map(day => ({
       day,
       positive: days[day].positive,
@@ -244,10 +279,12 @@ const Dashboard = () => {
     
     setSentimentData(formatted);
   };
-
+  
+  // Extract recommendations from feedback data
   const extractRecommendations = (feedbackData) => {
     const recs = [];
-
+    
+    // Look for feedback items with recommendations
     feedbackData.forEach(item => {
       if (item.recommendations && item.recommendations.length > 0) {
         item.recommendations.forEach(rec => {
@@ -261,25 +298,30 @@ const Dashboard = () => {
         });
       }
     });
-
+    
+    // Remove duplicates by issue
     const uniqueRecs = recs.reduce((acc, rec) => {
       const existing = acc.find(r => r.issue === rec.issue);
       if (!existing) {
         acc.push(rec);
       } else if (existing.priority === 'medium' && rec.priority === 'high') {
-               const index = acc.findIndex(r => r.issue === rec.issue);
+        // If we have a duplicate with higher priority, use that one
+        const index = acc.findIndex(r => r.issue === rec.issue);
         acc[index] = rec;
       }
       return acc;
     }, []);
     
-       uniqueRecs.sort((a, b) => {
+    // Sort by priority (high to low)
+    uniqueRecs.sort((a, b) => {
       const priorities = { high: 3, medium: 2, low: 1 };
       return priorities[b.priority] - priorities[a.priority];
     });
     
-    setRecommendations(uniqueRecs.slice(0, 5)); 
+    setRecommendations(uniqueRecs.slice(0, 5)); // Take top 5
   };
+  
+  // Determine priority based on feedback properties
   const determinePriority = (feedback) => {
     if (feedback.sentiment_label === 'very negative' || feedback.rating <= 2) {
       return 'high';
@@ -289,7 +331,8 @@ const Dashboard = () => {
       return 'low';
     }
   };
-
+  
+  // Recommendation carousel controls
   const nextRecommendation = () => {
     setCurrentRecommendation((prev) => 
       prev === recommendations.length - 1 ? 0 : prev + 1
@@ -301,7 +344,8 @@ const Dashboard = () => {
       prev === 0 ? recommendations.length - 1 : prev - 1
     );
   };
-
+  
+  // Toggle recommendation checked status
   const toggleRecommendationCheck = (recId) => {
     if (checkedRecommendations.includes(recId)) {
       setCheckedRecommendations(checkedRecommendations.filter(id => id !== recId));
@@ -310,6 +354,7 @@ const Dashboard = () => {
     }
   };
   
+  // Helper function for priority colors
   const getPriorityColor = (priority) => {
     switch (priority) {
       case 'high': 
@@ -322,7 +367,8 @@ const Dashboard = () => {
         return darkMode ? 'bg-gray-800 text-gray-200' : 'bg-gray-100 text-gray-800';
     }
   };
- 
+  
+  // Navigate to historical analysis
   const goToHistoricalAnalysis = () => {
     navigate('/historical-analysis');
   };
@@ -522,7 +568,8 @@ const Dashboard = () => {
             backgroundColor: EMOTION_COLORS[index % EMOTION_COLORS.length]
           }}
           onMouseEnter={(e) => {
-               const tooltip = document.createElement('div');
+            // Create and show tooltip only for the hovered emotion
+            const tooltip = document.createElement('div');
             tooltip.className = 'emotion-tooltip';
             tooltip.textContent = `${emotion.name}: ${emotion.value}%`;
             tooltip.style.position = 'absolute';
@@ -539,7 +586,8 @@ const Dashboard = () => {
             e.currentTarget.appendChild(tooltip);
           }}
           onMouseLeave={(e) => {
-             const tooltip = e.currentTarget.querySelector('.emotion-tooltip');
+            // Remove tooltip when mouse leaves
+            const tooltip = e.currentTarget.querySelector('.emotion-tooltip');
             if (tooltip) {
               e.currentTarget.removeChild(tooltip);
             }
@@ -625,7 +673,8 @@ const Dashboard = () => {
                     tick={(props) => {
                       const { x, y, payload } = props;
                       const dept = departmentData.find(d => d.name === payload.value);
-                           if (dept && (dept.isTop || dept.isBottom)) {
+                      // Only display labels for top and bottom departments
+                      if (dept && (dept.isTop || dept.isBottom)) {
                         return (
                           <text x={x} y={y + 10} textAnchor="middle" fill={darkMode ? "#D1D5DB" : "#4B5563"}>
                             {payload.value}

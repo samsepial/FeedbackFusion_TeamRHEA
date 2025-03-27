@@ -1,3 +1,4 @@
+// src/pages/Results.jsx
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ThemeContext } from '../contexts/ThemeContext';
@@ -56,9 +57,11 @@ const Results = () => {
   const [includeBothSentimentEmotion, setIncludeBothSentimentEmotion] = useState(true);
   const [enhancedVisualDesign, setEnhancedVisualDesign] = useState(true);
   
+  // Constants for chart colors
   const EMOTION_COLORS = ['#4ade80', '#94a3b8', '#60a5fa', '#f59e0b', '#ef4444'];
   const RATING_COLORS = ['#22c55e', '#4ade80', '#fcd34d', '#f97316', '#ef4444'];
- 
+  
+  // Department color mapping (to match dashboard)
   const DEPARTMENT_COLORS = {
     'Front Desk': '#60a5fa',
     'Housekeeping': '#4ade80',
@@ -70,6 +73,7 @@ const Results = () => {
     'General': '#ef4444'
   };
   
+  // All available departments and emotions
   const allDepartments = [
     'Front Desk', 
     'Room Service', 
@@ -89,7 +93,8 @@ const Results = () => {
     'surprise', 
     'fear'
   ];
- 
+  
+  // Close expanded chart when clicking outside
   const chartRefs = useRef({});
   
   useEffect(() => {
@@ -104,81 +109,97 @@ const Results = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [expandedChart]);
-
+  
+  // Fetch data on component mount and when filters change
   useEffect(() => {
     fetchData();
   }, [dateRange, selectedDepartments, selectedEmotions, keywords]);
   
+  // Helper to get current date in YYYY-MM-DD format
   function getCurrentDate() {
     const now = new Date();
     return now.toISOString().split('T')[0];
   }
-
+  
+  // Helper to get default start date (7 days ago)
   function getDefaultStartDate() {
     const date = new Date();
     date.setDate(date.getDate() - 7);
     return date.toISOString().split('T')[0];
   }
-
+  
+  // Add keyword function
   const addKeyword = (keyword) => {
     if (!keywords.includes(keyword) && keyword.trim()) {
       setKeywords([...keywords, keyword.trim()]);
-      setCurrentPage(1); 
+      setCurrentPage(1); // Reset to first page when filter changes
+    }
     setInputValue('');
   };
-
+  
+  // Remove keyword function
   const removeKeyword = (keyword) => {
     setKeywords(keywords.filter(k => k !== keyword));
-    setCurrentPage(1); 
+    setCurrentPage(1); // Reset to first page when filter changes
   };
   
+  // Handle keyword input
   const handleKeywordKeyDown = (e) => {
     if (e.key === 'Enter' && inputValue.trim()) {
       addKeyword(inputValue);
       e.preventDefault();
     }
   };
-
+  
+  // Toggle department selection
   const toggleDepartment = (dept) => {
     if (selectedDepartments.includes(dept)) {
       setSelectedDepartments(selectedDepartments.filter(d => d !== dept));
     } else {
       setSelectedDepartments([...selectedDepartments, dept]);
     }
-    setCurrentPage(1); 
+    setCurrentPage(1); // Reset to first page when filter changes
   };
   
+  // Toggle emotion selection
   const toggleEmotion = (emotion) => {
     if (selectedEmotions.includes(emotion)) {
       setSelectedEmotions(selectedEmotions.filter(e => e !== emotion));
     } else {
       setSelectedEmotions([...selectedEmotions, emotion]);
     }
-    setCurrentPage(1); 
+    setCurrentPage(1); // Reset to first page when filter changes
   };
   
+  // Function to fetch data
   const fetchData = async () => {
     try {
       setLoading(true);
-
+      
+      // Get date range for the query
       const { startDate, endDate } = getDateRange(dateRange);
       
+      // Prepare params
       const params = {
         start: startDate.toISOString(),
         end: endDate.toISOString()
       };
-
+      
+      // Add departments filter if selected
       if (selectedDepartments.length > 0) {
         params.departments = selectedDepartments.join(',');
       }
-
+      
+      // Add emotions filter if selected
       if (selectedEmotions.length > 0) {
         params.emotions = selectedEmotions.join(',');
       }
-
+      
+      // Fetch reviews
       const reviewsResponse = await api.get('/feedback', { params });
       let fetchedReviews = reviewsResponse.data;
-  
+      
+      // Apply keyword filter in the frontend if specified
       if (keywords.length > 0) {
         fetchedReviews = fetchedReviews.filter(review => {
           const text = (review.feedback_text || '') + ' ' + (review.textTranslated || '');
@@ -186,11 +207,14 @@ const Results = () => {
           return keywords.some(keyword => lowerText.includes(keyword.toLowerCase()));
         });
       }
-
+      
+      // Set reviews
       setReviews(fetchedReviews);
       
+      // Calculate stats
       calculateStats(fetchedReviews);
-
+      
+      // Prepare chart data
       prepareSentimentData(fetchedReviews);
       prepareEmotionData(fetchedReviews);
       prepareDepartmentData(fetchedReviews);
@@ -202,7 +226,8 @@ const Results = () => {
       setLoading(false);
     }
   };
-
+  
+  // Helper to get date range
   const getDateRange = (rangeType) => {
     const endDate = new Date();
     let startDate = new Date();
@@ -224,6 +249,7 @@ const Results = () => {
     return { startDate, endDate };
   };
   
+  // Calculate stats from reviews
   const calculateStats = (reviews) => {
     if (reviews.length === 0) {
       setStats({
@@ -234,15 +260,18 @@ const Results = () => {
       });
       return;
     }
-
+    
+    // Calculate average rating
     const totalRating = reviews.reduce((sum, review) => sum + (review.rating || 0), 0);
     const avgRating = (totalRating / reviews.length).toFixed(1);
-
+    
+    // Calculate sentiment score (percentage of positive sentiment)
     const positiveSentiment = reviews.filter(r => 
       r.sentiment_label === 'positive' || r.sentiment_label === 'very positive'
     ).length;
     const sentimentScore = Math.round((positiveSentiment / reviews.length) * 100);
     
+    // Get unique departments
     const departments = [...new Set(reviews.map(r => r.department))].filter(Boolean);
     
     setStats({
@@ -252,17 +281,21 @@ const Results = () => {
       departments
     });
   };
-
+  
+  // Prepare sentiment data for charts
   const prepareSentimentData = (reviews) => {
+    // Generate an array for days of the week in order
     const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     const initialData = daysOfWeek.map(day => ({ day, positive: 0, negative: 0, total: 0 }));
     
+    // Group by day of week and count sentiments
     reviews.forEach(review => {
       if (!review.date) return;
       
       const date = new Date(review.date);
-      const dayIndex = date.getDay(); 
+      const dayIndex = date.getDay(); // 0 = Sunday, 1 = Monday, etc.
       
+      // Increment count
       initialData[dayIndex].total++;
       
       if (review.sentiment_label === 'positive' || review.sentiment_label === 'very positive') {
@@ -271,7 +304,8 @@ const Results = () => {
         initialData[dayIndex].negative++;
       }
     });
-
+    
+    // Calculate percentages
     const data = initialData.map(item => {
       if (item.total === 0) return { day: item.day, positive: 0, negative: 0 };
       
@@ -285,27 +319,34 @@ const Results = () => {
     
     setSentimentData(data);
   };
-
+  
+  // Prepare emotion data for charts
   const prepareEmotionData = (reviews) => {
-
+    // Count emotions
     const emotionCounts = reviews.reduce((acc, review) => {
       const emotion = review.emotion_label || 'Unknown';
       acc[emotion] = (acc[emotion] || 0) + 1;
       return acc;
     }, {});
-
+    
+    // Convert to array and calculate percentages
     const data = Object.entries(emotionCounts).map(([name, count]) => ({
       name,
       value: Math.round((count / reviews.length) * 100)
     }));
-
+    
+    // Sort by value descending
     data.sort((a, b) => b.value - a.value);
     
-    setEmotionData(data.slice(0, 5)); 
-
+    setEmotionData(data.slice(0, 5)); // Take top 5 emotions
+  };
+  
+  // Prepare department data for charts
   const prepareDepartmentData = (reviews) => {
+    // If departments are filtered, only show those
     const deptsToShow = selectedDepartments.length > 0 ? selectedDepartments : allDepartments;
-s
+    
+    // Group by department and calculate average scores
     const deptScores = reviews.reduce((acc, review) => {
       const dept = review.department || 'Unknown';
       
@@ -319,6 +360,7 @@ s
       return acc;
     }, {});
     
+    // Calculate averages for specified departments
     const data = deptsToShow.map(dept => {
       const score = deptScores[dept] 
         ? parseFloat((deptScores[dept].total / deptScores[dept].count).toFixed(1)) 
@@ -333,27 +375,32 @@ s
     
     setDepartmentData(data);
   };
-
+  
+  // Prepare rating data for charts
   const prepareRatingData = (reviews) => {
+    // Count ratings
     const ratingCounts = reviews.reduce((acc, review) => {
       const rating = Math.round(review.rating || 0);
       const ratingKey = `${rating}★`;
       acc[ratingKey] = (acc[ratingKey] || 0) + 1;
       return acc;
     }, {});
-
+    
+    // Fill in missing ratings
     for (let i = 1; i <= 5; i++) {
       const key = `${i}★`;
       if (!ratingCounts[key]) {
         ratingCounts[key] = 0;
       }
     }
-  
+    
+    // Convert to array and calculate percentages
     const data = Object.entries(ratingCounts).map(([name, count]) => ({
       name,
       value: Math.round((count / reviews.length) * 100) || 0
     }));
- 
+    
+    // Sort by rating value (not percentage)
     data.sort((a, b) => {
       const aValue = parseInt(a.name.charAt(0));
       const bValue = parseInt(b.name.charAt(0));
@@ -362,10 +409,13 @@ s
     
     setRatingData(data);
   };
-
+  
+  // Extract negative keywords helper function
   const extractNegativeKeywords = (reviews) => {
+    // Count occurrences of negative words
     const wordCounts = {};
-
+    
+    // Filter for negative reviews
     const negativeReviews = reviews.filter(r => 
       r.sentiment_label === 'negative' || r.sentiment_label === 'very negative');
     
@@ -373,7 +423,8 @@ s
       if (!review.feedback_text) return;
       
       const text = review.feedback_text.toLowerCase();
-
+      
+      // Check text against common negative keywords
       const negativeWordsList = [
         'slow', 'cold', 'dirty', 'broken', 'noise', 'poor', 'disappointing', 
         'expensive', 'rude', 'wait', 'error', 'wrong', 'bad', 'overpriced',
@@ -388,7 +439,8 @@ s
         }
       });
     });
-
+    
+    // Return top negative keywords
     return Object.entries(wordCounts)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 10)
@@ -413,7 +465,8 @@ s
       } else {
         console.log("Historical chart export function not available");
       }
- 
+      
+      // Load the FF.png logo
       let logoImage = null;
       try {
         const response = await fetch('/FF.png');
@@ -428,7 +481,8 @@ s
       } catch (err) {
         console.error('Error loading logo:', err);
       }
-
+      
+      // Prepare report parameters
       const reportParams = {
         format: reportFormat,
         startDate: reportTimeframe === 'custom' ? reportStartDate : undefined,
@@ -447,18 +501,21 @@ s
           dateRange: reportTimeframe === 'current' ? dateRange : 'custom',
         }
       };
-
+      
+      // If using current filters (not custom timeframe), calculate date range
       if (reportTimeframe === 'current') {
         const { startDate, endDate } = getDateRange(dateRange);
         reportParams.startDate = startDate.toISOString().split('T')[0];
         reportParams.endDate = endDate.toISOString().split('T')[0];
       }
-
+      
+      // Extract negative keywords from reviews if enabled
       let negativeKeywords = [];
       if (includeNegativeKeywords) {
         negativeKeywords = extractNegativeKeywords(reviews);
       }
-
+      
+      // Generate the report
       await generateReport(reportParams, {
         sentimentData,
         emotionData,
@@ -469,7 +526,8 @@ s
         stats,
         negativeKeywords
       });
-
+      
+      // Show success message
       setTimeout(() => {
         alert(`${reportFormat.toUpperCase()} report generated successfully`);
       }, 500);
@@ -480,7 +538,8 @@ s
     } catch (error) {
       console.error('Error generating report:', error);
       
-       let errorMessage = 'Failed to generate report. Please try again.';
+      // Error handling
+      let errorMessage = 'Failed to generate report. Please try again.';
       if (error.response) {
         errorMessage = error.response.data?.message || errorMessage;
       } else if (error.message) {
@@ -491,17 +550,17 @@ s
       setGeneratingReport(false);
     }
   };
-
+  // Get current page of reviews
   const getCurrentReviews = () => {
     const indexOfLastReview = currentPage * reviewsPerPage;
     const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
     return reviews.slice(indexOfFirstReview, indexOfLastReview);
   };
   
-
+  // Calculate total pages
   const totalPages = Math.ceil(reviews.length / reviewsPerPage);
   
-
+  // Helper function for rating/sentiment color
   const getRatingColor = (rating) => {
     if (darkMode) {
       if (rating >= 4.5) return 'bg-green-900 text-green-200';
@@ -597,7 +656,8 @@ s
       }
     }
   };
-
+  
+  // Render tag input component
   const renderTagInput = () => {
     return (
       <div className="w-full">
@@ -649,7 +709,8 @@ s
       </div>
     );
   };
-
+  
+  // Render multi-select dropdown for departments
   const renderDepartmentSelect = () => {
     return (
       <div className="w-full">
@@ -708,7 +769,8 @@ s
       </div>
     );
   };
-
+  
+  // Render multi-select dropdown for emotions
   const renderEmotionSelect = () => {
     return (
       <div className="w-full">
@@ -765,7 +827,8 @@ s
       </div>
     );
   };
-
+  
+  // Render expandable chart
   const renderExpandableChart = (chartId, title, chart) => {
     const isExpanded = expandedChart === chartId;
     
