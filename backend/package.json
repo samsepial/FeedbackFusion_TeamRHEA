@@ -8,6 +8,7 @@
     "dev": "nodemon src/index.js"
   },
   "dependencies": {
+    "@vitalets/google-translate-api": "^9.2.1",
     "apify-client": "^2.12.1",
     "bcrypt": "^5.1.1",
     "chromedriver": "^134.0.3",

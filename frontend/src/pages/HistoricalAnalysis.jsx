@@ -1,3 +1,4 @@
+// src/pages/HistoricalAnalysis.jsx
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ThemeContext } from '../contexts/ThemeContext';
@@ -51,6 +52,7 @@ const HistoricalAnalysis = () => {
     { id: 'sentiment-comparison', name: 'Sentiment Comparison', type: 'area' },
   ];
   
+  // Department color mapping (to match dashboard)
   const DEPARTMENT_COLORS = {
     'Front Desk': '#60a5fa',
     'Housekeeping': '#4ade80',
@@ -61,6 +63,7 @@ const HistoricalAnalysis = () => {
     'General': '#ef4444'
   };
   
+  // List of available departments
   const allDepartments = [
     'Front Desk', 
     'Room Service', 
@@ -71,13 +74,16 @@ const HistoricalAnalysis = () => {
     'General'
   ];
   const [expandedChart, setExpandedChart] = useState(null);
-
+  // Colors
   const EMOTION_COLORS = ['#4ade80', '#94a3b8', '#60a5fa', '#f59e0b', '#ef4444'];
-
+  
+  // Reference for graph selector dropdown
   const graphSelectorRef = useRef(null);
 
+  // References for charts
   const chartRefs = useRef({});
-
+  
+  // Close graph selector when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (graphSelectorRef.current && !graphSelectorRef.current.contains(event.target)) {
@@ -90,27 +96,34 @@ const HistoricalAnalysis = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
+  
+  // Initialize with default start/end dates
   useEffect(() => {
     fetchData();
   }, []);
-
+  
+  // Function to export a chart as image
   const exportChartAsImage = (chartId) => {
     const chartContainer = chartRefs.current[chartId];
     if (!chartContainer) return null;
-
+    
+    // Find the SVG element inside the chart container
     const svgElement = chartContainer.querySelector('svg');
     if (!svgElement) return null;
-
+    
+    // Create a canvas and draw the SVG
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
-
+    
+    // Set canvas dimensions
     canvas.width = svgElement.width.baseVal.value;
     canvas.height = svgElement.height.baseVal.value;
     
+    // Create an image from the SVG
     const svgData = new XMLSerializer().serializeToString(svgElement);
     const img = new Image();
-
+    
+    // Using encodeURIComponent to handle special characters
     img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
     
     return new Promise((resolve) => {
@@ -133,9 +146,11 @@ const HistoricalAnalysis = () => {
     });
   };
 
+  // Function to export all charts
   const exportAllCharts = async () => {
     const chartData = [];
-
+    
+    // Get all active chart IDs from the graphs state
     const chartIds = graphs.map(g => g.id);
     
     for (const chartId of chartIds) {
@@ -150,25 +165,31 @@ const HistoricalAnalysis = () => {
     return chartData;
   };
 
+  // Make the exportAllCharts function available globally
   useEffect(() => {
+    // Expose the function to the window object so it can be called from other components
     window.exportHistoricalCharts = exportAllCharts;
     
+    // Clean up when component unmounts
     return () => {
       delete window.exportHistoricalCharts;
     };
-  }, [graphs, darkMode]); 
-
+  }, [graphs, darkMode]); // Dependencies - refresh when graphs or theme changes
+  
+  // Helper to get current date in YYYY-MM-DD format
   function getCurrentDate() {
     const now = new Date();
     return now.toISOString().split('T')[0];
   }
   
+  // Helper to get default start date (14 days ago)
   function getDefaultStartDate() {
     const date = new Date();
     date.setDate(date.getDate() - 14);
     return date.toISOString().split('T')[0];
   }
-
+  
+  // Toggle department selection
   const toggleDepartment = (dept) => {
     if (selectedDepartments.includes(dept)) {
       setSelectedDepartments(selectedDepartments.filter(d => d !== dept));
@@ -185,7 +206,8 @@ const HistoricalAnalysis = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
- 
+      
+      // Prepare params
       const params = {
         start: startDate,
         end: endDate
@@ -195,19 +217,23 @@ const HistoricalAnalysis = () => {
         params.departments = selectedDepartments.join(',');
       }
       
+      // Fetch historical data
       const histResponse = await api.get('/feedback/historical', { params });
       setHistoricalData(histResponse.data || []);
-
+      
+      // Fetch all feedback for additional analysis
       const feedbackResponse = await api.get('/feedback', { params });
       const feedbackData = feedbackResponse.data || [];
       
+      // Process data for charts
       processTrendData(histResponse.data);
       processDepartmentData(feedbackData);
       processEmotionData(feedbackData);
       processSentimentComparisonData(histResponse.data);
       processRatingDistributionData(feedbackData);
       processWeeklyTrendData(feedbackData);
- 
+      
+      // Calculate stats
       calculateStats(feedbackData, histResponse.data);
       
     } catch (error) {
@@ -218,10 +244,11 @@ const HistoricalAnalysis = () => {
   };
   
   const processTrendData = (historicalData) => {
+    // Format data for trend line charts
     const formattedData = historicalData.map(item => ({
       date: item._id,
       sentiment: item.avgRating || 0,
-      rating: item.avgRating || 0,
+      rating: item.avgRating || 0, // Assuming these are the same in your data
       reviews: item.count || 0
     }));
     
@@ -229,30 +256,36 @@ const HistoricalAnalysis = () => {
   };
   
   const processDepartmentData = (feedbackData) => {
+    // If departments are filtered, only show those
     const deptsToShow = selectedDepartments.length > 0 ? selectedDepartments : allDepartments;
-
+    
+    // Group by department and calculate average scores
     const deptScores = feedbackData.reduce((acc, review) => {
       const dept = review.department || 'Unknown';
       
       if (!acc[dept]) {
         acc[dept] = { current: 0, previous: 0, currentCount: 0, previousCount: 0 };
       }
-     
+      
+      // Determine if current or previous period
       const reviewDate = new Date(review.date);
       const midpoint = new Date(startDate);
       midpoint.setDate(midpoint.getDate() + (new Date(endDate) - new Date(startDate)) / (2 * 86400000));
       
       if (reviewDate >= midpoint) {
+        // Current period
         acc[dept].current += review.rating || 0;
         acc[dept].currentCount++;
       } else {
+        // Previous period
         acc[dept].previous += review.rating || 0;
         acc[dept].previousCount++;
       }
       
       return acc;
     }, {});
-
+    
+    // Calculate averages for each department
     const data = deptsToShow.map(dept => {
       const currentAvg = deptScores[dept]?.currentCount > 0 
         ? parseFloat((deptScores[dept].current / deptScores[dept].currentCount).toFixed(1)) 
@@ -274,6 +307,7 @@ const HistoricalAnalysis = () => {
   };
   
   const processEmotionData = (feedbackData) => {
+    // Count emotions
     const emotionCounts = {};
     let totalWithEmotion = 0;
     
@@ -285,17 +319,21 @@ const HistoricalAnalysis = () => {
       totalWithEmotion++;
     });
     
+    // Convert to percentages
     const data = Object.keys(emotionCounts).map(name => ({
       name,
       value: Math.round((emotionCounts[name] / (totalWithEmotion || 1)) * 100)
-    })).sort((a, b) => b.value - a.value).slice(0, 5); 
+    })).sort((a, b) => b.value - a.value).slice(0, 5); // Get top 5
     
     setEmotionData(data);
   };
   
   const processSentimentComparisonData = (historicalData) => {
-       const formattedData = historicalData.map(item => {
-      const positivePercentage = Math.min(Math.round(item.avgRating * 20) || 70, 95); 
+    // Format data for area chart
+    const formattedData = historicalData.map(item => {
+      // If you don't have this data, you'll need to estimate it
+      // Here we're making up some reasonable values based on average rating
+      const positivePercentage = Math.min(Math.round(item.avgRating * 20) || 70, 95); // 0-5 scale to percentage
       const neutralPercentage = Math.round((100 - positivePercentage) / 2);
       const negativePercentage = 100 - positivePercentage - neutralPercentage;
       
@@ -311,7 +349,8 @@ const HistoricalAnalysis = () => {
   };
   
   const processRatingDistributionData = (feedbackData) => {
-      const ratingCounts = {
+    // Count ratings
+    const ratingCounts = {
       '1★': 0,
       '2★': 0,
       '3★': 0,
@@ -328,10 +367,12 @@ const HistoricalAnalysis = () => {
       }
     });
     
+    // Convert to percentages
     const data = Object.keys(ratingCounts).map(name => ({
       name,
       value: feedbackData.length > 0 ? Math.round((ratingCounts[name] / feedbackData.length) * 100) : 0
     })).sort((a, b) => {
+      // Sort by rating number (5★ to 1★)
       return parseInt(b.name) - parseInt(a.name);
     });
     
@@ -339,13 +380,16 @@ const HistoricalAnalysis = () => {
   };
   
   const processWeeklyTrendData = (feedbackData) => {
+    // Days of the week
     const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const dayData = {};
- 
+    
+    // Initialize days
     daysOfWeek.forEach(day => {
       dayData[day] = { rating: 0, sentiment: 0, count: 0 };
     });
-
+    
+    // Aggregate by day of week
     feedbackData.forEach(review => {
       if (!review.date) return;
       
@@ -356,9 +400,10 @@ const HistoricalAnalysis = () => {
       dayData[dayOfWeek].sentiment += review.sentiment_confidence || 0;
       dayData[dayOfWeek].count++;
     });
-
+    
+    // Calculate averages
     const data = daysOfWeek.map(day => {
-      const count = dayData[day].count || 1; 
+      const count = dayData[day].count || 1; // Avoid division by zero
       return {
         day,
         rating: parseFloat((dayData[day].rating / count).toFixed(1)),
@@ -374,7 +419,8 @@ const HistoricalAnalysis = () => {
     if (!reviews || reviews.length === 0) {
       return { totalReviews: 0, avgRating: 0, sentimentScore: 0 };
     }
-
+    
+    // Calculate average rating
     let totalRating = 0;
     let ratingCount = 0;
     
@@ -386,14 +432,16 @@ const HistoricalAnalysis = () => {
     });
     
     const avgRating = ratingCount > 0 ? (totalRating / ratingCount).toFixed(1) : 0;
- 
+    
+    // Calculate sentiment score
     const positiveSentiment = reviews.filter(r => 
       r.sentiment_label === 'positive' || r.sentiment_label === 'very positive'
     ).length;
     
     const sentimentScore = reviews.length > 0 ? 
       Math.round((positiveSentiment / reviews.length) * 100) : 0;
-  
+    
+    // Determine trend direction
     let trendDirection = 'Stable';
     if (historicalData.length >= 2) {
       const recentHalf = historicalData.slice(-Math.ceil(historicalData.length / 2));
@@ -419,7 +467,7 @@ const HistoricalAnalysis = () => {
   
   const addGraph = (graphType) => {
     if (graphs.length < 6) {
-
+      // Check if graph already exists
       if (!graphs.find(g => g.id === graphType.id)) {
         setGraphs([...graphs, graphType]);
       }
@@ -427,10 +475,18 @@ const HistoricalAnalysis = () => {
     }
   };
   
+  // Function to remove a graph
   const removeGraph = (id) => {
+    // Close expanded view if we're removing the expanded chart
+    if (expandedChart === id) {
+      setExpandedChart(null);
+    }
+    
+    // Remove the graph from the graphs array
     setGraphs(graphs.filter(g => g.id !== id));
   };
-
+  
+  // Render multi-select dropdown for departments
   const renderDepartmentSelect = () => {
     return (
       <div className="w-full">
@@ -495,7 +551,8 @@ const HistoricalAnalysis = () => {
       </div>
     );
   };
- 
+  
+  // Function to render the appropriate graph type
   const renderGraph = (graphType) => {
     switch(graphType.id) {
       case 'sentiment':
@@ -666,6 +723,7 @@ const HistoricalAnalysis = () => {
     }
   };
 
+  // Render expandable chart with remove button
   const renderExpandableChart = (chartId, title, chart) => {
     const isExpanded = expandedChart === chartId;
     
@@ -676,19 +734,33 @@ const HistoricalAnalysis = () => {
       >
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-lg font-semibold">{title}</h2>
-          <button
-            onClick={() => setExpandedChart(isExpanded ? null : chartId)}
-            className={`p-1 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}`}
-            title={isExpanded ? "Minimize" : "Expand"}
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            {isExpanded ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              )}
-            </svg>
-          </button>
+          <div className="flex items-center space-x-2">
+            {/* Remove Graph Button - New Addition */}
+            <button
+              onClick={() => removeGraph(chartId)}
+              className={`p-1 rounded-full ${darkMode ? 'hover:bg-gray-700 text-gray-400 hover:text-red-400' : 'hover:bg-gray-200 text-gray-500 hover:text-red-500'}`}
+              title="Remove Graph"
+            >
+             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            
+            {/* Expand/Collapse Button */}
+            <button
+              onClick={() => setExpandedChart(isExpanded ? null : chartId)}
+              className={`p-1 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}`}
+              title={isExpanded ? "Minimize" : "Expand"}
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              {isExpanded ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
         
         <div className={`transition-all duration-300 ease-in-out ${isExpanded ? 'h-96' : 'h-64'}`}>
@@ -732,7 +804,7 @@ const HistoricalAnalysis = () => {
       </div>
     );
   };
-  
+
   return (
     <div className={`p-6 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'} min-h-screen`}>
       {/* Page header */}
@@ -803,79 +875,93 @@ const HistoricalAnalysis = () => {
       </div>
       
       {/* Add Graph Button with Dropdown */}
-      <div className="mb-4 flex justify-end relative" ref={graphSelectorRef}>
-        <button
-          onClick={() => setShowGraphSelector(!showGraphSelector)}
-          className={`px-4 py-2 rounded-lg flex items-center ${
-            graphs.length >= 6
-              ? 'bg-gray-400 cursor-not-allowed text-gray-200'
-              : 'bg-green-600 hover:bg-green-700 text-white'
-          } transition-colors`}
-          disabled={graphs.length >= 6}
-        >
-          <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-          </svg>
-          Add Graph
-          <svg className="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
+      <div className="mb-4 flex justify-between items-center">
+        <div>
+          {/* Add info text about graph management */}
+          {graphs.length > 0 && (
+            <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              {graphs.length === 1 
+                ? "1 graph displayed. Click the X to remove it." 
+                : `${graphs.length} graphs displayed. Click the X on any graph to remove it.`
+              }
+            </p>
+          )}
+        </div>
         
-        {/* Graph Selection Dropdown */}
-        {showGraphSelector && (
-          <div className={`absolute right-0 top-12 z-10 w-64 mt-2 rounded-md shadow-lg ${
-            darkMode ? 'bg-gray-800' : 'bg-white'
-          } ring-1 ring-black ring-opacity-5 overflow-y-auto max-h-60`}>
-            <div className="py-1">
-              {availableGraphs
-                .filter(graph => !graphs.some(g => g.id === graph.id))
-                .map(graph => (
-                  <button
-                    key={graph.id}
-                    onClick={() => addGraph(graph)}
-                    className={`w-full text-left px-4 py-2 text-sm ${
-                      darkMode 
-                        ? 'text-gray-300 hover:bg-gray-700' 
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    <div className="flex items-center">
-                      <span className="w-8 text-center">
-                        {graph.type === 'line' && (
-                          <svg className="h-5 w-5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4" />
-                          </svg>
-                        )}
-                        {graph.type === 'bar' && (
-                          <svg className="h-5 w-5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                          </svg>
-                        )}
-                        {graph.type === 'pie' && (
-                          <svg className="h-5 w-5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
-                          </svg>
-                        )}
-                        {graph.type === 'area' && (
-                          <svg className="h-5 w-5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                          </svg>
-                        )}
-                      </span>
-                      <span className="ml-2">{graph.name}</span>
+        <div className="relative" ref={graphSelectorRef}>
+          <button
+            onClick={() => setShowGraphSelector(!showGraphSelector)}
+            className={`px-4 py-2 rounded-lg flex items-center ${
+              graphs.length >= 6
+                ? 'bg-gray-400 cursor-not-allowed text-gray-200'
+                : 'bg-green-600 hover:bg-green-700 text-white'
+            } transition-colors`}
+            disabled={graphs.length >= 6}
+          >
+            <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Add Graph
+            <svg className="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          
+          {/* Graph Selection Dropdown */}
+          {showGraphSelector && (
+            <div className={`absolute right-0 top-12 z-10 w-64 mt-2 rounded-md shadow-lg ${
+              darkMode ? 'bg-gray-800' : 'bg-white'
+            } ring-1 ring-black ring-opacity-5 overflow-y-auto max-h-60`}>
+              <div className="py-1">
+                {availableGraphs
+                  .filter(graph => !graphs.some(g => g.id === graph.id))
+                  .map(graph => (
+                    <button
+                      key={graph.id}
+                      onClick={() => addGraph(graph)}
+                      className={`w-full text-left px-4 py-2 text-sm ${
+                        darkMode 
+                          ? 'text-gray-300 hover:bg-gray-700' 
+                          : 'text-gray-700 hover:bg-gray-100'
+                      }`}
+                    >
+                      <div className="flex items-center">
+                        <span className="w-8 text-center">
+                          {graph.type === 'line' && (
+                            <svg className="h-5 w-5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4" />
+                            </svg>
+                          )}
+                          {graph.type === 'bar' && (
+                            <svg className="h-5 w-5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                          )}
+                          {graph.type === 'pie' && (
+                            <svg className="h-5 w-5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                            </svg>
+                          )}
+                          {graph.type === 'area' && (
+                            <svg className="h-5 w-5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                          )}
+                        </span>
+                        <span className="ml-2">{graph.name}</span>
+                      </div>
+                    </button>
+                  ))}
+                  {availableGraphs.filter(graph => !graphs.some(g => g.id === graph.id)).length === 0 && (
+                    <div className="px-4 py-2 text-sm text-gray-500">
+                      All graph types are already displayed
                     </div>
-                  </button>
-                ))}
-                {availableGraphs.filter(graph => !graphs.some(g => g.id === graph.id)).length === 0 && (
-                  <div className="px-4 py-2 text-sm text-gray-500">
-                    All graph types are already displayed
-                  </div>
-                )}
+                  )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
       
       {/* Graphs Grid */}
@@ -973,4 +1059,4 @@ const HistoricalAnalysis = () => {
   );
 };
 
-export default HistoricalAnalysis; 
+export default HistoricalAnalysis;

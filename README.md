@@ -101,62 +101,80 @@ FeedbackFusion/
 └── README.md              # Project documentation
 ```
 
-## Installation
+# Quick Start Guide for Professors and First-Time Users
 
-### Prerequisites
-- Node.js (v14+)
-- MongoDB (v4.4+)
-- Python (v3.8+)
-- Git
-- Yarn
+We've prepared a simple process to get you started with FeedbackFusion quickly:
 
-### Step 1: Clone the repository
+## Option 1: Automated Setup (Recommended)
+
+We've included a setup script that will install dependencies and create an admin user for you:
+
 ```bash
-git clone https://github.com/samsepial/FeedbackFusion_TeamRHEA.git
-cd FeedbackFusion_TeamRHEA
+# Make the script executable
+chmod +x setup.sh
+
+# Run the setup script
+./setup.sh
 ```
 
-### Step 2: Set up backend
+This script will:
+1. Install backend and frontend dependencies using Yarn
+2. Check if MongoDB is running
+3. Create an admin user in the database
+
+After the setup is complete, you can start the application:
 ```bash
+# Terminal 1: Start the backend
 cd backend
-yarn install
+yarn start
+
+# Terminal 2: Start the frontend
+cd frontend
+yarn dev
 ```
 
-### Step 3: Set up frontend
-```bash
-cd ../frontend
-yarn install
-```
+## Option 2: Manual Setup
 
-### Step 4: Set up NLP service
-```bash
-cd ../nlp_service
-pip install -r requirements.txt
-```
+If you prefer a manual setup:
 
-## NLP Models
-
-The sentiment analysis model is hosted on Hugging Face and can be accessed at:
-- Model: ar2107/rhea_sentiment_finetuned_lite
-
-For local development, the model will be automatically downloaded when running the NLP service.
-
-#### Note about NLP Models
-## NLP Models
-
-The sentiment analysis model is hosted on Hugging Face and can be accessed at:
-- Model: ar2107/rhea_sentiment_finetuned_lite
-
-For local development, the model will be automatically downloaded when running the NLP service.
-   ```
-
-2. **Or train your own models** using the included `sentiment_training.py` script:
+1. Install dependencies:
    ```bash
-   python sentiment_training.py
+   # Install backend dependencies
+   cd backend
+   yarn install
+   
+   # Install frontend dependencies
+   cd frontend
+   yarn install
    ```
 
-### Step 5: Set up MongoDB
-Ensure MongoDB is running on your system. The application will try to connect to `mongodb://127.0.0.1:27017/feedbackfusion` by default.
+2. Create an admin user:
+   ```bash
+   # Make sure MongoDB is running
+   cd backend
+   node create-admin.js
+   ```
+
+3. Start the application:
+   ```bash
+   # Terminal 1: Start the backend
+   cd backend
+   yarn start
+   
+   # Terminal 2: Start the frontend
+   cd frontend
+   yarn dev
+   ```
+
+## Login Credentials
+
+After setup, you can log in with these admin credentials:
+- Username: `admin`
+- Password: `admin123`
+
+## Detailed Installation Guide
+
+For more detailed instructions, please refer to the [INSTALLATION.md](INSTALLATION.md) file.
 
 ## Usage
 

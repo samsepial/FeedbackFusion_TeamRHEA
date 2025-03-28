@@ -3,105 +3,105 @@
     "feedback_text": "Front desk staff was extremely helpful!",
     "rating": 5,
     "department": "Front Desk",
-    "date": "2025-03-20",
+    "date": "2025-03-22",
     "source": "TripAdvisor"
   },
   {
     "feedback_text": "Room service took forever, and the food was cold.",
     "rating": 2,
     "department": "Room Service",
-    "date": "2025-03-19",
+    "date": "2025-03-24",
     "source": "Google Reviews"
   },
   {
     "feedback_text": "The pool area was clean and well-maintained. Loved the heated water.",
     "rating": 5,
     "department": "Maintenance",
-    "date": "2025-03-15",
+    "date": "2025-03-25",
     "source": "In-Hotel Survey"
   },
   {
     "feedback_text": "Noise from the hallway woke me up at night. Not ideal for business travel.",
     "rating": 3,
     "department": "General",
-    "date": "2025-03-19",
-    "source": "Twitter"
+    "date": "2025-03-26",
+    "source": "In-Hotel Survey"
   },
   {
     "feedback_text": "Breakfast buffet had good variety, but coffee machine was broken.",
     "rating": 4,
     "department": "Food & Beverage",
-    "date": "2025-03-14",
+    "date": "2025-03-24",
     "source": "Booking.com"
   },
   {
     "feedback_text": "Wi-Fi was painfully slow, but the manager offered a discount for the trouble.",
     "rating": 3,
     "department": "Maintenance",
-    "date": "2025-03-14",
-    "source": "Facebook Comment"
+    "date": "2025-03-23",
+    "source": "Booking.com"
   },
   {
     "feedback_text": "Housekeeping forgot to refill toiletries on the second day.",
     "rating": 2,
     "department": "Housekeeping",
-    "date": "2025-03-16",
-    "source": "Instagram Mention"
+    "date": "2025-03-24",
+    "source": "Google Reviews"
   },
   {
     "feedback_text": "Conference rooms were well-equipped, but the projector in room B flickered a lot.",
     "rating": 3,
     "department": "Conference",
-    "date": "2025-03-17",
+    "date": "2025-03-25",
     "source": "In-Hotel Survey"
   },
   {
     "feedback_text": "Gym equipment was top-notch and towels were always fresh. Great experience!",
     "rating": 5,
     "department": "Fitness",
-    "date": "2025-03-19",
+    "date": "2025-03-24",
     "source": "Google Reviews"
   },
   {
     "feedback_text": "Restaurant menu needs more vegetarian options, but staff was very accommodating.",
     "rating": 4,
     "department": "Food & Beverage",
-    "date": "2025-03-16",
+    "date": "2025-03-25",
     "source": "TripAdvisor"
   },
   {
     "feedback_text": "Elevator was out of service for several hours, quite inconvenient.",
     "rating": 2,
     "department": "Maintenance",
-    "date": "2025-03-19",
-    "source": "Yelp"
+    "date": "2025-03-24",
+    "source": "Google Reviews"
   },
   {
     "feedback_text": "Check-in process was smooth, and the reception desk remembered my preferences.",
     "rating": 5,
     "department": "Front Desk",
-    "date": "2025-03-18",
-    "source": "Instagram Mention"
+    "date": "2025-03-23",
+    "source": "Google Reviews"
   },
   {
     "feedback_text": "I had a billing issue at checkout that took 30 minutes to resolve.",
     "rating": 3,
     "department": "Front Desk",
-    "date": "2025-03-19",
+    "date": "2025-03-22",
     "source": "In-Hotel Survey"
   },
   {
     "feedback_text": "Air conditioning in my room was stuck on max cold, but the technician fixed it quickly.",
     "rating": 4,
     "department": "Maintenance",
-    "date": "2025-03-18",
+    "date": "2025-03-22",
     "source": "Google Reviews"
   },
   {
     "feedback_text": "Lounge bar had a great ambiance, but the cocktails were overpriced.",
     "rating": 3,
     "department": "Food & Beverage",
-    "date": "2025-03-17",
+    "date": "2025-03-22",
     "source": "TripAdvisor"
   }
 ]

@@ -91,6 +91,11 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/quickjs-emscripten/-/quickjs-emscripten-0.23.0.tgz#db4ecfd499a9765ab24002c3b696d02e6d32a12c"
   integrity sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==
 
+"@types/http-errors@^1.8.2":
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/@types/http-errors/-/http-errors-1.8.2.tgz#7315b4c4c54f82d13fa61c228ec5c2ea5cc9e0e1"
+  integrity sha512-EqX+YQxINb+MeXaIqYDASb6U6FCHbWjkj4a1CKDBks3d/QiB2+PqBLyO72vLDgAO1wUI4O+9gweRcQK11bTL/w==
+
 "@types/node@*":
   version "22.13.5"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-22.13.5.tgz#23add1d71acddab2c6a4d31db89c0f98d330b511"
@@ -116,6 +121,15 @@
   integrity sha512-oJoftv0LSuaDZE3Le4DbKX+KS9G36NzOeSap90UIK0yMA/NhKJhqlSGtNDORNRaIbQfzjXDrQa0ytJ6mNRGz/Q==
   dependencies:
     "@types/node" "*"
+
+"@vitalets/google-translate-api@^9.2.1":
+  version "9.2.1"
+  resolved "https://registry.yarnpkg.com/@vitalets/google-translate-api/-/google-translate-api-9.2.1.tgz#7e7a772c15fee783e09663e58c974474f6abdf29"
+  integrity sha512-zlwQWSjXUZhbZQ6qwtIQ7GdYXFQmJ4wYqzcrYJUxtvzQQwUP+uKUb/SRJaBOQuBntjBjzcdcJoLFrpCKUbIkOg==
+  dependencies:
+    "@types/http-errors" "^1.8.2"
+    http-errors "^2.0.0"
+    node-fetch "^2.6.7"
 
 abbrev@1:
   version "1.1.1"
@@ -997,7 +1011,7 @@ hasown@^2.0.2:
   dependencies:
     function-bind "^1.1.2"
 
-http-errors@2.0.0:
+http-errors@2.0.0, http-errors@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/http-errors/-/http-errors-2.0.0.tgz#b7774a1486ef73cf7667ac9ae0858c012c57b9d3"
   integrity sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==

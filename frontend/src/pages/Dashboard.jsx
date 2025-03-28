@@ -82,58 +82,72 @@ const Dashboard = () => {
   };
   
   // Function to fetch dashboard data
-  const fetchDashboardData = async () => {
-    try {
-      setLoading(true);
-      
-      // Get date range based on timeframe
-      const endDate = new Date();
-      const startDate = new Date();
-      
-      if (timeframe === 'week') {
-        startDate.setDate(endDate.getDate() - 7);
-      } else if (timeframe === 'all') {
-        startDate.setFullYear(startDate.getFullYear() - 1); // Default to 1 year
-      }
-      
-      // Fetch feedback data
-      const feedbackResponse = await api.get('/feedback', {
-        params: {
-          start: startDate.toISOString(),
-          end: endDate.toISOString()
-        }
-      });
-      
-      const feedbackData = feedbackResponse.data || [];
-      
-      // Fetch historical data
-      const histResponse = await api.get('/feedback/historical', {
-        params: {
-          start: startDate.toISOString(),
-          end: endDate.toISOString()
-        }
-      });
-      
-      // Process historical data
-      processHistoricalData(histResponse.data || []);
-      
-      // Calculate stats
-      calculateStats(feedbackData);
-      
-      // Process data for charts
-      processDepartmentData(feedbackData);
-      processEmotionData(feedbackData);
-      processSentimentData(feedbackData);
-      
-      // Extract recommendations
-      extractRecommendations(feedbackData);
-      
-    } catch (error) {
-      console.error('Error fetching dashboard data:', error);
-    } finally {
-      setLoading(false);
+  // In the fetchDashboardData function of Dashboard.jsx
+const fetchDashboardData = async () => {
+  try {
+    setLoading(true);
+    
+    // Get date range based on timeframe
+    const endDate = new Date();
+    const startDate = new Date();
+    
+    if (timeframe === 'week') {
+      startDate.setDate(endDate.getDate() - 7);
+    } else if (timeframe === 'all') {
+      startDate.setFullYear(startDate.getFullYear() - 1); // Default to 1 year
     }
-  };
+    
+    // Fetch feedback data
+    const feedbackResponse = await api.get('/feedback', {
+      params: {
+        start: startDate.toISOString().split('T')[0],
+        end: endDate.toISOString().split('T')[0]
+      }
+    });
+    
+    let feedbackData = feedbackResponse.data || [];
+    
+    // Additional client-side date filtering to ensure accuracy
+    feedbackData = feedbackData.filter(item => {
+      if (!item.date) return false;
+      
+      const reviewDate = new Date(item.date);
+      return reviewDate >= startDate && reviewDate <= endDate;
+    });
+    
+    // Filter out empty feedback text
+    feedbackData = feedbackData.filter(item => 
+      item.feedback_text && item.feedback_text.trim() !== ''
+    );
+    
+    // Fetch historical data
+    const histResponse = await api.get('/feedback/historical', {
+      params: {
+        start: startDate.toISOString().split('T')[0],
+        end: endDate.toISOString().split('T')[0]
+      }
+    });
+    
+    // Process historical data
+    processHistoricalData(histResponse.data || []);
+    
+    // Calculate stats
+    calculateStats(feedbackData);
+    
+    // Process data for charts
+    processDepartmentData(feedbackData);
+    processEmotionData(feedbackData);
+    processSentimentData(feedbackData);
+    
+    // Extract recommendations
+    extractRecommendations(feedbackData);
+    
+  } catch (error) {
+    console.error('Error fetching dashboard data:', error);
+  } finally {
+    setLoading(false);
+  }
+};
   
   // Process historical data
   const processHistoricalData = (data) => {
@@ -879,49 +893,53 @@ const Dashboard = () => {
             </div>
           )}
         </div>
-        
-        {/* Recent Reviews */}
-        <div className={`p-6 ${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-md`}>
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">Recent Reviews</h2>
-            <Link to="/results" className="text-sm text-green-600 hover:text-green-700 dark:text-green-500 dark:hover:text-green-400">
-              View All →
-            </Link>
+       
+{/* Recent Reviews */}
+<div className={`p-6 ${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-md`}>
+  <div className="flex justify-between items-center mb-4">
+    <h2 className="text-lg font-semibold">Recent Reviews</h2>
+    <Link to="/results" className="text-sm text-green-600 hover:text-green-700 dark:text-green-500 dark:hover:text-green-400">
+      View All →
+    </Link>
+  </div>
+  
+  {loading ? (
+    <div className="space-y-4 animate-pulse">
+      <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-700' : 'bg-gray-200 border-gray-200'} h-24`}></div>
+      <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-700' : 'bg-gray-200 border-gray-200'} h-24`}></div>
+    </div>
+  ) : (
+    <div className="space-y-4">
+      {/* Filter out reviews with no feedback text */}
+      {historicalData
+        .filter(item => item.reviews > 0)
+        .slice(-2)
+        .map((item, index) => (
+          <div key={index} className={`p-4 rounded-lg border ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+            <div className="flex justify-between">
+              <div className="flex items-center">
+                <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded mr-2">
+                  {item.sentiment.toFixed(1)} ★
+                </span>
+                <span className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                  {item.date}
+                </span>
+              </div>
+              <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                {item.reviews} reviews
+              </span>
+            </div>
+            <p className="mt-2">
+              {index === 0 
+                ? "The staff was extremely helpful during our stay. Room was clean and comfortable."
+                : "Restaurant menu needs more vegetarian options, but staff was very accommodating."}
+            </p>
           </div>
-          
-          {loading ? (
-            <div className="space-y-4 animate-pulse">
-              <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-700' : 'bg-gray-200 border-gray-200'} h-24`}></div>
-              <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-700' : 'bg-gray-200 border-gray-200'} h-24`}></div>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {/* We'll show the two most recent reviews */}
-              {historicalData.slice(-2).map((item, index) => (
-                <div key={index} className={`p-4 rounded-lg border ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
-                  <div className="flex justify-between">
-                    <div className="flex items-center">
-                      <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded mr-2">
-                        {item.sentiment.toFixed(1)} ★
-                      </span>
-                      <span className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                        {item.date}
-                      </span>
-                    </div>
-                    <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                      {item.reviews} reviews
-                    </span>
-                  </div>
-                  <p className="mt-2">
-                    {index === 0 
-                      ? "The staff was extremely helpful during our stay. Room was clean and comfortable."
-                      : "Restaurant menu needs more vegetarian options, but staff was very accommodating."}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        ))}
+    </div>
+  )}
+</div>
+   
       </div>
       
       {/* Alert Sidebar */}

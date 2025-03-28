@@ -2,14 +2,34 @@ const { ApifyClient } = require('apify-client');
 const mongoose = require('mongoose');
 const Feedback = require('../models/feedback.cjs');
 const { analyzeFeedbackText } = require('./nlpService');
+// Add translation library - you need to install this with npm
+const translate = require('@vitalets/google-translate-api');
 
 const apifyClient = new ApifyClient({
   token: process.env.APIFY_API_TOKEN || 'apify_api_EfTr2KN27klqLsT9TcWh6ATk0nUTsu3GxUOU',
 });
 
+// Function to detect and translate text if not in English
+async function translateIfNeeded(text) {
+  try {
+    // Simple language detection - if it contains common non-English characters
+    const nonEnglishRegex = /[^\u0000-\u007F]+/;
+    if (nonEnglishRegex.test(text)) {
+      // Perform translation
+      const result = await translate(text, {to: 'en'});
+      console.log(`Translated text from non-English to English`);
+      return result.text;
+    }
+    return null; // Return null if no translation needed
+  } catch (error) {
+    console.error('Translation error:', error);
+    return null; // Return null if translation fails
+  }
+}
+
 async function scrapeReviewsWithApify() {
   try {
-      if (mongoose.connection.readyState !== 1) {
+    if (mongoose.connection.readyState !== 1) {
       await mongoose.connect('mongodb://127.0.0.1:27017/feedbackfusion?directConnection=true');
       console.log('Connected to MongoDB.');
     } else {
@@ -39,7 +59,7 @@ async function scrapeReviewsWithApify() {
     
     for (const item of items) {
       try {
-              if (!item.text || (!item.stars && !item.rating)) {
+        if (!item.text || (!item.stars && !item.rating)) {
           console.log('Item missing required review fields, skipping');
           continue;
         }
@@ -107,7 +127,7 @@ async function scrapeReviewsWithApify() {
     
     console.log(`Total reviews processed: ${allReviews.length}`);
     
-      const oneWeekAgo = new Date();
+    const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
     
     const recentReviews = allReviews.filter(review => review.date >= oneWeekAgo);
@@ -140,8 +160,13 @@ async function scrapeReviewsWithApify() {
       let sentiment_label = 'unknown', sentiment_confidence = 0;
       let emotion_label = 'unknown', emotion_confidence = 0;
       let dept_label = 'general'; 
+      let translatedText = null;
 
       try {
+        // Try to translate text if needed
+        translatedText = await translateIfNeeded(text);
+        
+        // Use the original text for NLP analysis
         const analysis = await analyzeFeedbackText(text);
         if (analysis?.sentiment) {
           sentiment_label = analysis.sentiment.label;
@@ -155,12 +180,12 @@ async function scrapeReviewsWithApify() {
           dept_label = analysis.department.label;
         }
       } catch (err) {
-        console.error('NLP error:', err);
+        console.error('NLP or translation error:', err);
       }
 
       const feedbackDoc = new Feedback({
         feedback_text: text,
-        textTranslated: text,
+        textTranslated: translatedText, // Set translated text or null if no translation
         rating,
         date: rawReview.date,
         source: "GoogleScraper",

@@ -246,7 +246,7 @@ const LandingPage = () => {
                 
                 <div className={`rounded-lg overflow-hidden shadow-xl ${darkMode ? 'bg-gray-700' : 'bg-white'}`}>
                   <img 
-                    src={darkMode ? "feedback-challenge-dark.png" : "feedback-challenge.png"} 
+                    src={darkMode ? "feedback-challenge.png" : "feedback-challenge.png"} 
                     alt="Hotel feedback challenges" 
                     className="w-full h-auto"
                     onError={(e) => { e.target.src = "https://via.placeholder.com/600x400?text=Feedback+Challenges"; }}
@@ -264,7 +264,7 @@ const LandingPage = () => {
               >
                 <div className={`rounded-lg overflow-hidden shadow-xl ${darkMode ? 'bg-gray-700' : 'bg-white'} order-2 lg:order-1`}>
                   <img 
-                    src={darkMode ? "solution-dark.png" : "solution.png"} 
+                    src={darkMode ? "solution.png" : "solution.png"} 
                     alt="FeedbackFusion solution" 
                     className="w-full h-auto"
                     onError={(e) => { e.target.src = "https://via.placeholder.com/600x400?text=Our+Solution"; }}

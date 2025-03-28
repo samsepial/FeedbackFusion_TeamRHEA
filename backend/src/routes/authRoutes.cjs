@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User.cjs'); 
-
+const bcrypt = require('bcrypt');
 
 router.post('/login', async (req, res) => {
   try {
