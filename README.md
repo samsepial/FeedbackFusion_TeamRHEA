@@ -1,9 +1,6 @@
-Here's the full README file updated to use Yarn commands instead of npm:
-
 ```markdown
 # FeedbackFusion
 
-![FeedbackFusion Logo](public/FF.png)
 
 ## Project Overview
 
@@ -204,19 +201,7 @@ The NLP service will run on http://localhost:5001
 Username: `admin`  
 Password: `admin123`
 
-## Screenshots
 
-### Dashboard
-![Dashboard](screenshots/dashboard.png)
-
-### Sentiment Analysis
-![Sentiment Analysis](screenshots/sentiment-analysis.png)
-
-### Historical Analysis
-![Historical Analysis](screenshots/historical-analysis.png)
-
-### User Management
-![User Management](screenshots/user-management.png)
 
 ## Future Enhancements
 
