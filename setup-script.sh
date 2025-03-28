@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "======================================"
-echo "FeedbackFusion Setup Script"
+echo "FeedbackFusion - Team RHEA Setup Script"
 echo "======================================"
 
 # Check if MongoDB is installed

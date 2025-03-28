@@ -17,8 +17,8 @@ We've provided a setup script that automates the installation process:
 
 ```bash
 # Clone the repository
-git clone https://github.com/YourUsername/FeedbackFusion.git
-cd FeedbackFusion
+git clone https://github.com/samsepial/FeedbackFusion_TeamRHEA.git
+cd FeedbackFusion_TeamRHEA
 
 # Make the setup script executable
 chmod +x setup.sh
@@ -42,8 +42,8 @@ If you prefer to install manually or if the automated script doesn't work for yo
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/YourUsername/FeedbackFusion.git
-cd FeedbackFusion
+git clone https://github.com/samsepial/FeedbackFusion_TeamRHEA.git
+cd FeedbackFusion_TeamRHEA
 ```
 
 ### Step 2: Install Backend Dependencies

@@ -110,6 +110,10 @@ We've prepared a simple process to get you started with FeedbackFusion quickly:
 We've included a setup script that will install dependencies and create an admin user for you:
 
 ```bash
+# Clone the repository
+git clone https://github.com/samsepial/FeedbackFusion_TeamRHEA.git
+cd FeedbackFusion_TeamRHEA
+
 # Make the script executable
 chmod +x setup.sh
 
@@ -175,9 +179,6 @@ After setup, you can log in with these admin credentials:
 ## Detailed Installation Guide
 
 For more detailed instructions, please refer to the [INSTALLATION.md](INSTALLATION.md) file.
-
-## Usage
-
 ### Starting the Backend
 ```bash
 cd backend
