@@ -10,6 +10,9 @@ The platform centralizes feedback from multiple sources, including manual upload
 
 Built with a modern tech stack including MongoDB, Express.js, React, and Node.js (MERN stack), with Python-based NLP services, FeedbackFusion transforms how hotels understand and respond to guest experiences, ultimately improving service quality and guest satisfaction.
 
+##Video Link
+https://youtu.be/BS1I90Qyhis
+
 ## Team Information
 
 **Team RHEA**
